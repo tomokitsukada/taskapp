@@ -50,11 +50,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 // 各セルの内容を返すメソッド
  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      // 再利用可能な cell を得る
-     var cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-    
-       
-    
-    cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+
 
     // Cellに値を設定する.  --- ここから ---
     
@@ -123,7 +120,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // segue で画面遷移する時に呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
-        let inpuViewController:InpuViewController = segue.destination as! InpuViewController
+        let inpuViewController:InputViewController = segue.destination as! InputViewController
 
         if segue.identifier == "cellSegue" {
             let indexPath = self.tableView.indexPathForSelectedRow
@@ -147,19 +144,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
 
     
-
     @IBOutlet weak var kensaku: UISearchBar!
     
 
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-         let predicate = NSPredicate(format: "category == '\(kensaku.text!)'")
-              taskArray = realm.objects(Task.self).filter(predicate)
-        
-        print("\(kensaku.text!)")
     
-}
-
+        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    
+    
+    if(kensaku.text == "") {
+        //検索文字列が空の場合はすべてを表示する。
+        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true) 
+        tableView.reloadData()
+        
+    } else {
+         let predicate = NSPredicate(format: "category == '\(kensaku.text!)'")
+                     taskArray = realm.objects(Task.self).filter(predicate)
+               
+               tableView.reloadData()
+        }
+    }
+    
+    @IBAction func cancel(_ sender: Any) {
+        
+       kensaku.text = ""
+       taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true) 
+            tableView.reloadData()
+        
+    }
+    
+    
 }
 

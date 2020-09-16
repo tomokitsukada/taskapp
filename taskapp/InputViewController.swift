@@ -13,14 +13,16 @@ import UserNotifications    // 追加
 
  
 
-class InpuViewController: UIViewController {
+class InputViewController: UIViewController {
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var contentsTextView: UITextView!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var categoryTextField: UITextField!
     
-    let realm = try! Realm()    // 追加する
+ 
+    
+ let realm = try! Realm()    // 追加する
     var task: Task!   // 追加する
     
     override func viewDidLoad() {
@@ -34,7 +36,12 @@ class InpuViewController: UIViewController {
             contentsTextView.text = task.contents
             categoryTextField.text = task.category
             datePicker.date = task.date
+        
         }
+    
+    
+    
+  
     
     // 追加する
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,6 +58,15 @@ class InpuViewController: UIViewController {
 
         super.viewWillDisappear(animated)
     }
+    
+    @objc func dismissKeyboard(){
+         // キーボードを閉じる
+         view.endEditing(true)
+
+
+         }
+}
+
     
     // タスクのローカル通知を登録する --- ここから ---
     func setNotification(task: Task) {
@@ -93,14 +109,8 @@ class InpuViewController: UIViewController {
     } // --- ここまで追加 ---
 
 
-        @objc func dismissKeyboard(){
-            // キーボードを閉じる
-            view.endEditing(true)
-
-
-            }
+ 
             
-    }
     
 
     
